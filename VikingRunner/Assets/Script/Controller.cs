@@ -7,10 +7,14 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Collider))]
 public class Controller : MonoBehaviour
 {
-    [SerializeField] Vector3 Direction = new Vector3(0, 0, 0);
-    [SerializeField] float movingSpeed = 5f;
-    [SerializeField] float rotationSpeed = 360f;
-    [SerializeField] int jumpForce = 400;
+    [SerializeField] private AnimationCurve swipeRotateAnimationCurve; // configure in inspector
+    private Coroutine swipeRotateCoroutine = null;
+    private float swipeRotationDuration = 0.5f; // duration of rotation in seconds
+
+    Vector3 Direction = new Vector3(0, 0, 0);
+    float movingSpeed = 5f;
+    float rotationSpeed = 360f;
+    int jumpForce = 300;
 
     private Rigidbody rigidbody;
     private Animator animator;
@@ -18,24 +22,61 @@ public class Controller : MonoBehaviour
     private RaycastHit raycastHit;
     private bool isOnGround = true,isRunning = false;
 
+
     //self define function
+    private IEnumerator HorizontalRotate(float degreesRight)
+    {
+        float t = 0;
+        Quaternion startRot = transform.rotation;
+
+        // update rotation until 
+        while (t < 1f)
+        {
+            // let next frame occur
+            yield return null;
+
+            // update timer
+            t = Mathf.Min(1f, t + Time.deltaTime / swipeRotationDuration);
+
+            // Find how much rotation corresponds to time at t:
+            float degrees = degreesRight * swipeRotateAnimationCurve.Evaluate(t);
+
+            // Apply that amount of rotation to the starting rotation:
+            transform.rotation = startRot * Quaternion.Euler(0f, degrees, 0f);
+        }
+
+        // allow for next swipe
+        swipeRotateCoroutine = null;
+    }
+
     private void BasicControl() {
         isRunning = false;
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
         //rotate character
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.D))
         {
-            Direction =  new Vector3(0, horizontalInput, 0);
-            transform.Rotate(rotationSpeed * Time.deltaTime * Direction);
+            if (swipeRotateCoroutine != null)
+            {
+                StopCoroutine(swipeRotateCoroutine);
+                swipeRotateCoroutine = null;
+            }
+
+            swipeRotateCoroutine = StartCoroutine(HorizontalRotate(90f));
         }
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.A))
         {
-            Direction = new Vector3(0, horizontalInput, 0);
-            transform.Rotate(rotationSpeed * Time.deltaTime * Direction);
+            if (swipeRotateCoroutine != null)
+            {
+                StopCoroutine(swipeRotateCoroutine);
+                swipeRotateCoroutine = null;
+            }
+
+            swipeRotateCoroutine = StartCoroutine(HorizontalRotate(-90f));
         }
 
+        //move forward
         if (Input.GetKey(KeyCode.W)){
             Direction = transform.rotation * Vector3.forward;
             transform.localPosition += movingSpeed * Time.deltaTime * Direction;
@@ -50,16 +91,7 @@ public class Controller : MonoBehaviour
         }
     }
 
-    private void MouseNavigation() {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out raycastHit))
-            {
-                navMeshAgent.SetDestination(raycastHit.point);
-            }
-        }
-    }
+
 
     //avoid air jumping
     private void OnCollisionEnter(Collision collision)
