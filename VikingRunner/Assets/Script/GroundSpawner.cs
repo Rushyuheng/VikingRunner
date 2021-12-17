@@ -60,7 +60,7 @@ public class GroundSpawner : MonoBehaviour
         nextSpawnPoint = transform.position;
         previousRotation = transform.rotation;
 
-        //spawn road
+        //spawn first three road
         SpawnRoad();
         SpawnRoad();
         SpawnRoad();

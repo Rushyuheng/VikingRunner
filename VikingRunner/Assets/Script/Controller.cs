@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
@@ -18,7 +17,6 @@ public class Controller : MonoBehaviour
 
     private Rigidbody rigidbody;
     private Animator animator;
-    private NavMeshAgent navMeshAgent;
     private RaycastHit raycastHit;
     private bool isOnGround = true,isRunning = false;
 
@@ -107,7 +105,6 @@ public class Controller : MonoBehaviour
     {
         rigidbody = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-        navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
     // Update is called once per frame
