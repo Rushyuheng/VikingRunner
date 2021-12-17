@@ -96,7 +96,7 @@ public class Controller : MonoBehaviour
     //avoid air jumping
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.name.Contains("Ground")) {
+        if (collision.gameObject.name.Contains("Ground") || collision.gameObject.name.Contains("Bridge")) {
             isOnGround = true;
         }
         
