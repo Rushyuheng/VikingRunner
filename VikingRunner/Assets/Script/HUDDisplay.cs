@@ -23,6 +23,6 @@ public class HUDDisplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        TimeText.text = Time.time.ToString();
+        TimeText.text = Time.timeSinceLevelLoad.ToString();
     }
 }
