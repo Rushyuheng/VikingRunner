@@ -89,6 +89,13 @@ public class Controller : MonoBehaviour
         }
     }
 
+    private void CheckFallToDeath() {
+        if (transform.localPosition.y < -7)
+        {
+            EnemyAI enemyAI = FindObjectOfType<EnemyAI>();
+            enemyAI.GameOver();
+        }
+    }
 
 
     //avoid air jumping
@@ -112,5 +119,6 @@ public class Controller : MonoBehaviour
     {
         BasicControl();
         animator.SetBool("isRunning", isRunning);
+        CheckFallToDeath();
     }
 }
