@@ -1,9 +1,12 @@
 # Viking Runner
+
 ###### tags: `assigment` `windows programming` `senior`
+[![hackmd-github-sync-badge](https://hackmd.io/t9Azgqg_SKmRZaXD1WeYQg/badge)](https://hackmd.io/t9Azgqg_SKmRZaXD1WeYQg)
 
 ## Env.
 * PC - support Mac, Windows, Linux
 * Recommand run on Windows 10
+* [github link](https://github.com/jamesyhh/VikingRunner)
 
 ## How to play
 1. Unzip the zip file
